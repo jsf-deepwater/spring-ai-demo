@@ -1,0 +1,14 @@
+server:
+  port: 8080
+spring:
+  ai:
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        model: qwen2.5:14b        # 按你实际模型改
+        options:
+          temperature: 0.1       # 权限演示，温度调低，减少模型自由发挥
+
+logging:
+  level:
+    com.deepwater.toolpermission: INFO

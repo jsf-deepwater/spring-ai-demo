@@ -18,6 +18,7 @@
   <packaging>pom</packaging>
   <modules>
     <module>tool-permission</module>
+    <module>long-term-memory</module>
   </modules>
 
   <properties>

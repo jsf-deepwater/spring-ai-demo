@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: long-term-memory
+
+  datasource:
+    # 文件模式：重启后记忆还在，能演示"永久生效"
+    # 想每次启动都是干净库，换成 jdbc:h2:mem:ltm-db
+    url: jdbc:h2:file:./long-term-memory/data/ltm-db;DB_CLOSE_ON_EXIT=FALSE
+#    url: jdbc:h2:file:./data/ltm-db;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password: ""
+    driver-class-name: org.h2.Driver
+
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  ai:
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        options:
+          model: qwen2.5:14b
+
+logging:
+  level:
+    org.springframework.ai: DEBUG   # 跑实验时要看最终发出去的 prompt

@@ -22,7 +22,7 @@
 ollama pull qwen2.5:14b
 
 # 2. 克隆 & 进入任意模块
-git clone 【仓库地址】
+git clone https://github.com/jsf-deepwater/spring-ai-demo.git
 cd spring-ai-demo/tool-permission
 
 # 3. 跑
@@ -38,6 +38,7 @@ mvn spring-boot:run
 | 子模块 | 对应文章 | 一句话主题 | 外部依赖 | 状态 |
 |---|---|---|---|---|
 | `tool-permission` | 《我们给系统上了 AI，第三天它自己删了一条数据》 | 用装饰器模式给 Tool Calling 加角色权限：运行时拦截 + fail-close | 仅 Ollama | ✅ |
+| `long-term-memory` | 《我让 AI 记住"我是 Go 开发"，它回了我一句"好的"，然后什么都没发生》 | 跨会话用户记忆空间：Advisor 前置注入偏好 + 接口/对话双写入路径 | 仅 Ollama（H2 内置） | ✅ |
 
 > 新文章发布后，这个表会往下加行。想找某篇的代码，直接搜文章标题里的关键词。
 
@@ -47,12 +48,15 @@ mvn spring-boot:run
 
 1. **每个模块独立可跑**。默认 profile 只用 Ollama —— 不需要装数据库、不需要申请 API Key。
 2. **重依赖走 Profile 隔离**。PGVector / Milvus 这类需要额外环境的，全部 `@Profile("rag")` 之类隔离，默认不启用，用得到才在模块 README 里说明。
-3. **父 pom 只放 100% 通用的依赖**（web / ollama / test / lombok）。模型 starter、webflux、chat-memory 等按需下沉到子模块 —— 这样避免了多 `ChatModel` bean 冲突、web 与 webflux 栈冲突这类难排查的问题。
+3. **父 pom 只放 100% 通用的依赖**（web / ollama / test / lombok）。模型 starter、webflux、chat-memory 等按需下沉到子模块 —— 这样避免了多 `ChatModel` bean 冲突、web 与 webflux 栈冲突这类难排查的问题。同理，`spring-boot-starter-jdbc` / `h2` 也只在 `long-term-memory` 子模块声明。
 4. **每个子模块有 README**，写清对应哪篇文章、怎么跑、需要什么环境。
 5. **仓库里的代码是"改完之后"的版本**，不是文章里演示错误演进的中间态。想抄就抄仓库的。
+6. **子模块若用文件型 H2**，数据源 URL 请写 `${user.home}/...` 而不是 `./data/...` —— 相对路径跟的是 JVM 工作目录，从父工程启动时会生成到父工程根。
 
 ---
 
 ## 相关文章
 
 持续更新于公众号，合集《SpringAI2.0》。
+
+GitHub：https://github.com/jsf-deepwater/spring-ai-demo
